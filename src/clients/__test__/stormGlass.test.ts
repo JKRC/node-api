@@ -45,8 +45,6 @@ describe('StormGlass client', () => {
     it('should get a generic error from StormGlass service when the request fail before reaching the service', async () => {
         const lat = -33.792726;
         const lng = 151.289824;
-
-        MockedRequestClass.isRequestError.mockReturnValue(true);
     
         mockedRequest.get.mockRejectedValue({ message: 'Network Error' });
     
@@ -60,6 +58,8 @@ describe('StormGlass client', () => {
     it('should get an StormGlassResponseError when the StormGlass service responds with error', async () => {
         const lat = -33.792726;
         const lng = 151.289824;
+
+        MockedRequestClass.isRequestError.mockReturnValue(true);
     
         mockedRequest.get.mockRejectedValue({
           response: {
