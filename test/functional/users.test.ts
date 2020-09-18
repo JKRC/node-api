@@ -53,7 +53,7 @@ describe('Users functional tests', () => {
         });
     });
     describe('When authenticating a user', () => {
-        it.only('Should generate a token for a valid user', async() => {
+        it('Should generate a token for a valid user', async() => {
             const newUser = {
                 name: 'John Doe',
                 email: 'john@mail.com',
@@ -72,7 +72,22 @@ describe('Users functional tests', () => {
         it('Should return UNAUTHORIZED if the user with the given email is not found', async () => {
             const response = await global.testRequest
                 .post('/users/authenticate')
-                .send({email: ''})
+                .send({email: 'some-email@mail.com', password: '1234'});
+
+            expect(response.status).toBe(401);
+        });
+        it('Should return UNAUTHORIZED if the user is found but the password does not match', async () => {
+            const newUser = {
+                name: 'John Doe',
+                email: 'john@mail.com',
+                password: '1234',
+            };
+            await new User(newUser).save();
+            const response = await global.testRequest
+                .post('/users/authenticate')
+                .send({email: newUser.email, password: 'different password'});
+
+            expect(response.status).toBe(401);
         });
     });
 }); 
